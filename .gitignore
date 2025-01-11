@@ -1,0 +1,8 @@
+# build directory
+x64/
+
+# stupid other directory
+MJUADS_A.e54c8017/
+
+#.vs
+.vs/
