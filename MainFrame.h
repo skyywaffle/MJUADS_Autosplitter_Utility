@@ -14,7 +14,5 @@ private:
 	void OnStartButtonClicked(wxCommandEvent& evt);
 	void OnLayoutBrowseButtonClicked(wxCommandEvent& evt);
 	bool ConfigureAutosplitter(int gameRegion, int category, wxString& layoutFilePath);
-
-	wxDECLARE_EVENT_TABLE();
 };
 
