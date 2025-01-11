@@ -2,9 +2,12 @@
 A utility to configure autosplitting for Monster Jam: Urban Assault DS
 
 ## How does it work?
-[ShootMe's DeSmuME Autosplitter component](https://github.com/ShootMe/LiveSplit.DeSmuME) works with LiveSplit and DeSmuME's memory to accurately split based on checking game addresses. However, this is only possible by configuring it to your layout, which is both tedious and can go wrong easily. This utility automates that process and (hopefully) works 100% of the time!
+- [ShootMe's DeSmuME Autosplitter component](https://github.com/ShootMe/LiveSplit.DeSmuME) works with LiveSplit and DeSmuME's memory to accurately split based on checking game addresses. However, this is only possible by configuring it to your layout, which is both tedious and can go wrong easily. This utility automates that process and (hopefully) works 100% of the time!
+- This autosplits upon pressing 'A' on the first track and then continues to split on the completion of each race.
 
 ## Disclaimers
+- Resetting is manual.
+- Make sure to quit the track and end up on the track menu before resetting.
 - This autosplitter only supports DeSmuME 0.9.11.
 - v0.1-alpha only has support for game region USA and the Speedster% category.
 - Since this project is currently not fully developed, please copy your LiveSplit layout file somewhere else before using the program, because the program directly modifies your layout file.
