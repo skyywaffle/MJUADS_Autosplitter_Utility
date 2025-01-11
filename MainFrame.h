@@ -13,6 +13,6 @@ private:
 
 	void OnStartButtonClicked(wxCommandEvent& evt);
 	void OnLayoutBrowseButtonClicked(wxCommandEvent& evt);
-	bool ConfigureAutosplitter(int gameRegion, int category, wxString& layoutFilePath);
+	bool ConfigureAutosplitter(int gameRegion, int category, std::string& layoutFilePath);
 };
 

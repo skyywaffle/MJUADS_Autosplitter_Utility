@@ -1,6 +1,8 @@
 #include "MainFrame.h"
+#include "autosplitterConfigurations.h"
 #include <wx/wx.h>
 #include <wx/filectrl.h>
+#include <fstream>
 
 enum class Region
 {
@@ -57,7 +59,7 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& evt)
 	{
 		wxLogStatus("Starting...");
 
-		wxString layoutFilePath = layoutFilePathBox->GetValue();
+		std::string layoutFilePath = layoutFilePathBox->GetValue().ToStdString();
 		if (ConfigureAutosplitter(gameRegionChoice->GetCurrentSelection(), categoryChoice->GetCurrentSelection(), layoutFilePath) == true)
 		{
 			wxLogStatus("Configured successfully! Make sure to use DeSmuME 0.9.11 and set your start time to 0.20s!");
@@ -86,7 +88,104 @@ void MainFrame::OnLayoutBrowseButtonClicked(wxCommandEvent& evt)
 }
 
 // returns true if the configuration was successful
-bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, wxString& layoutFilePath)
+bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string& layoutFilePath)
 {
+	std::string autosplitterConfig{};
+	if (gameRegion == (int)Region::USA)
+	{
+		if (category == (int)Category::SPEEDSTER)
+		{
+			autosplitterConfig = usaSpeedster;
+		}
+		else // World Series
+		{
+			return false; // not supported yet
+		}
+	}
+
+	if (gameRegion == (int)Region::PAL)
+	{
+		if (category == (int)Category::SPEEDSTER)
+		{
+			return false; // not supported yet
+		}
+		else // World Series
+		{
+			return false; // not supported yet
+		}
+	}
+
+	std::ifstream layoutFile{ layoutFilePath };
+	std::size_t desmumeIndex{};
+	std::size_t desmumeEndIndex{};
+	bool inDesmumeSettings{ false };
+	std::size_t componentEndIndex{};
+	std::string currLine{};
+	std::vector<std::string> lines{};
+	std::vector<std::string> newLayoutText{};
+
+	while (std::getline(layoutFile, currLine)) {
+		lines.push_back(currLine);
+	}
+	layoutFile.close();
+
+	for (std::size_t i{ 0 }; i < lines.size(); ++i)
+	{
+		if (lines[i] == "      <Path>LiveSplit.DeSmuME.dll</Path>")
+		{
+			desmumeIndex = i;
+			inDesmumeSettings = true;
+		}
+
+		else if (inDesmumeSettings && lines[i] == "      </Settings>")
+		{
+			desmumeEndIndex = i;
+			inDesmumeSettings = false;
+		}
+
+		else if (lines[i] == "  </Components>")
+		{
+			componentEndIndex = i;
+		}
+	}
+
+	if (desmumeIndex != 0) // if there is already an existing desmume component
+	{
+		for (std::size_t i{ 0 }; i <= desmumeIndex; ++i)
+		{
+			newLayoutText.push_back(lines[i]);
+		}
+
+		newLayoutText.push_back(autosplitterConfig);
+
+		for (std::size_t i{ desmumeEndIndex + 1 }; i < lines.size(); ++i)
+		{
+			newLayoutText.push_back(lines[i]);
+		}
+	}
+
+	else // fresh layout setup
+	{
+		for (std::size_t i{ 0 }; i < componentEndIndex; ++i)
+		{
+			newLayoutText.push_back(lines[i]);
+		}
+
+		newLayoutText.push_back(headerText);
+		newLayoutText.push_back(autosplitterConfig);
+		newLayoutText.push_back(footerText);
+
+		for (std::size_t i{ componentEndIndex }; i < lines.size(); ++i)
+		{
+			newLayoutText.push_back(lines[i]);
+		}
+	}
+
+	std::ofstream updatedLayout(layoutFilePath, std::ios::trunc);
+	for (std::string line : newLayoutText)
+	{
+		 updatedLayout << line;
+		 updatedLayout << '\n';
+	}
 	return true;
 }
