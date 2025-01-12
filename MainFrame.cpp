@@ -96,7 +96,7 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 	{
 		if (category == (int)Category::SPEEDSTER)
 		{
-			*autosplitterConfig = *usaSpeedster;
+			*autosplitterConfig = usaSpeedster;
 		}
 		else // World Series
 		{
@@ -108,7 +108,7 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 	{
 		if (category == (int)Category::SPEEDSTER)
 		{
-			*autosplitterConfig = *palSpeedster;
+			*autosplitterConfig = palSpeedster;
 		}
 		else // World Series
 		{
@@ -173,9 +173,9 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 			newLayoutText->push_back(lines->at(i));
 		}
 
-		newLayoutText->push_back(*headerText);
+		newLayoutText->push_back(headerText);
 		newLayoutText->push_back(*autosplitterConfig);
-		newLayoutText->push_back(*footerText);
+		newLayoutText->push_back(footerText);
 
 		for (std::size_t i{ componentEndIndex }; i < lines->size(); ++i)
 		{

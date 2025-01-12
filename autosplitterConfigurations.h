@@ -1,16 +1,16 @@
 #pragma once
 #include <string>
 
-std::string* headerText = new std::string{
+std::string headerText {
     "    <Component>\n"
     "      <Path>LiveSplit.DeSmuME.dll</Path>"
 };
 
-std::string* footerText = new std::string{
+std::string footerText {
     "    </Component>"
 };
 
-std::string* usaSpeedster = new std::string{
+std::string usaSpeedster {
         "      <Settings>\n"
         "        <Splits>\n"
         "          <Split>Equals,UInt32,235C231,1,True</Split>\n"
@@ -37,7 +37,7 @@ std::string* usaSpeedster = new std::string{
         "      </Settings>"
 };
 
-std::string* palSpeedster = new std::string{
+std::string palSpeedster {
         "      <Settings>\n"
         "        <Splits>\n"
         "          <Split>Equals,UInt32,235BD11,1,True</Split>\n"
