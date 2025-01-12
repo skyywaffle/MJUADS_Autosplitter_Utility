@@ -22,13 +22,13 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title)
 
 	// select game region!
 	wxStaticText* selectGameRegionText = new wxStaticText(panel, wxID_ANY, "Select Game Region:", wxPoint(50, 50));
-	wxArrayString regionArray = { "USA", "PAL" };
-	gameRegionChoice = new wxChoice(panel, wxID_ANY, wxPoint(550, 47), wxSize(50, -1), regionArray);
+	wxArrayString* regionArray = new wxArrayString{ "USA", "PAL" };
+	gameRegionChoice = new wxChoice(panel, wxID_ANY, wxPoint(550, 47), wxSize(50, -1), *regionArray);
 
 	// select category!
 	wxStaticText* selectCategoryText = new wxStaticText(panel, wxID_ANY, "Select Speedrun Category:", wxPoint(50, 100));
-	wxArrayString categoryArray = { "Speedster%", "World Series%" };
-	categoryChoice = new wxChoice(panel, wxID_ANY, wxPoint(490, 97), wxSize(110, -1), categoryArray);
+	wxArrayString* categoryArray = new wxArrayString{ "Speedster%", "World Series%" };
+	categoryChoice = new wxChoice(panel, wxID_ANY, wxPoint(490, 97), wxSize(110, -1), *categoryArray);
 
 	// select livesplit layout!
 	wxStaticText* selectLayoutText = new wxStaticText(panel, wxID_ANY, "Select LiveSplit Layout:", wxPoint(50, 150));
@@ -59,8 +59,8 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& evt)
 	{
 		wxLogStatus("Starting...");
 
-		std::string layoutFilePath = layoutFilePathBox->GetValue().ToStdString();
-		if (ConfigureAutosplitter(gameRegionChoice->GetCurrentSelection(), categoryChoice->GetCurrentSelection(), layoutFilePath) == true)
+		std::string* layoutFilePath = new std::string{ layoutFilePathBox->GetValue().ToStdString() };
+		if (ConfigureAutosplitter(gameRegionChoice->GetCurrentSelection(), categoryChoice->GetCurrentSelection(), *layoutFilePath) == true)
 		{
 			wxLogStatus("Configured successfully! Make sure to use DeSmuME 0.9.11 and set your start time to 0.20s!");
 		}
@@ -90,12 +90,12 @@ void MainFrame::OnLayoutBrowseButtonClicked(wxCommandEvent& evt)
 // returns true if the configuration was successful
 bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string& layoutFilePath)
 {
-	std::string autosplitterConfig{};
+	std::string* autosplitterConfig = new std::string{};
 	if (gameRegion == (int)Region::USA)
 	{
 		if (category == (int)Category::SPEEDSTER)
 		{
-			autosplitterConfig = usaSpeedster;
+			*autosplitterConfig = *usaSpeedster;
 		}
 		else // World Series
 		{
@@ -107,7 +107,7 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 	{
 		if (category == (int)Category::SPEEDSTER)
 		{
-			autosplitterConfig = palSpeedster;
+			*autosplitterConfig = *palSpeedster;
 		}
 		else // World Series
 		{
@@ -120,30 +120,30 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 	std::size_t desmumeEndIndex{};
 	bool inDesmumeSettings{ false };
 	std::size_t componentEndIndex{};
-	std::string currLine{};
-	std::vector<std::string> lines{};
-	std::vector<std::string> newLayoutText{};
+	std::string* currLine = new std::string{};
+	std::vector<std::string>* lines = new std::vector<std::string>{};
+	std::vector<std::string>* newLayoutText = new std::vector<std::string>{};
 
-	while (std::getline(layoutFile, currLine)) {
-		lines.push_back(currLine);
+	while (std::getline(layoutFile, *currLine)) {
+		lines->push_back(*currLine);
 	}
 	layoutFile.close();
 
-	for (std::size_t i{ 0 }; i < lines.size(); ++i)
+	for (std::size_t i{ 0 }; i < lines->size(); ++i)
 	{
-		if (lines[i] == "      <Path>LiveSplit.DeSmuME.dll</Path>")
+		if (lines->at(i) == "      <Path>LiveSplit.DeSmuME.dll</Path>")
 		{
 			desmumeIndex = i;
 			inDesmumeSettings = true;
 		}
 
-		else if (inDesmumeSettings && lines[i] == "      </Settings>")
+		else if (inDesmumeSettings && lines->at(i) == "      </Settings>")
 		{
 			desmumeEndIndex = i;
 			inDesmumeSettings = false;
 		}
 
-		else if (lines[i] == "  </Components>")
+		else if (lines->at(i) == "  </Components>")
 		{
 			componentEndIndex = i;
 		}
@@ -153,14 +153,14 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 	{
 		for (std::size_t i{ 0 }; i <= desmumeIndex; ++i)
 		{
-			newLayoutText.push_back(lines[i]);
+			newLayoutText->push_back(lines->at(i));
 		}
 
-		newLayoutText.push_back(autosplitterConfig);
+		newLayoutText->push_back(*autosplitterConfig);
 
-		for (std::size_t i{ desmumeEndIndex + 1 }; i < lines.size(); ++i)
+		for (std::size_t i{ desmumeEndIndex + 1 }; i < lines->size(); ++i)
 		{
-			newLayoutText.push_back(lines[i]);
+			newLayoutText->push_back(lines->at(i));
 		}
 	}
 
@@ -168,21 +168,21 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 	{
 		for (std::size_t i{ 0 }; i < componentEndIndex; ++i)
 		{
-			newLayoutText.push_back(lines[i]);
+			newLayoutText->push_back(lines->at(i));
 		}
 
-		newLayoutText.push_back(headerText);
-		newLayoutText.push_back(autosplitterConfig);
-		newLayoutText.push_back(footerText);
+		newLayoutText->push_back(*headerText);
+		newLayoutText->push_back(*autosplitterConfig);
+		newLayoutText->push_back(*footerText);
 
-		for (std::size_t i{ componentEndIndex }; i < lines.size(); ++i)
+		for (std::size_t i{ componentEndIndex }; i < lines->size(); ++i)
 		{
-			newLayoutText.push_back(lines[i]);
+			newLayoutText->push_back(lines->at(i));
 		}
 	}
 
 	std::ofstream updatedLayout(layoutFilePath, std::ios::trunc);
-	for (std::string line : newLayoutText)
+	for (std::string line : *newLayoutText)
 	{
 		 updatedLayout << line;
 		 updatedLayout << '\n';
