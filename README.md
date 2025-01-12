@@ -14,9 +14,10 @@ A utility to configure autosplitting for Monster Jam: Urban Assault DS
 - Change your split file to start at 0.20 seconds for the timing to be as accurate as possible with manual retiming.
 
 ## Usage
-- Download [LiveSplit.DeSmuME.dll](https://raw.githubusercontent.com/ShootMe/LiveSplit.DeSmuME/master/Components/LiveSplit.DeSmuME.dll) and place it in the LiveSplit/Components directory. In the future I may add an auto-downloader for it.
-- Download MJUADS_Autosplitter_Utility.exe from the [Releases](https://github.com/skyywaffle/MJUADS_Autosplitter_Utility/releases) tab.
-- Launch MJUADS_Autosplitter_Utility.exe and follow instructions.
+- Download both the LiveSplit.DeSmuME.dll and MJUADS_Autosplitter_Utility_(version).exe files from [Releases](https://github.com/skyywaffle/MJUADS_Autosplitter_Utility/releases).
+- Place LiveSplit.DeSmuME.dll in your LiveSplit/Components directory.
+- Launch MJUADS_Autosplitter_Utility.exe and configure according to game version and category!
+- Your layout file should then be all ready for autosplitting.
 
 ## Contributing
 This software is made using wxWidgets 3.2.6. If you have any suggestions or want to notify me of bugs/problems, you can contact me on Discord (@skyywaffle).
