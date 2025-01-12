@@ -107,7 +107,7 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 	{
 		if (category == (int)Category::SPEEDSTER)
 		{
-			return false; // not supported yet
+			autosplitterConfig = palSpeedster;
 		}
 		else // World Series
 		{
