@@ -69,6 +69,7 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& evt)
 			// this should hopefully only trigger if it's the user's fault (corrupt layout, etc.)
 			wxLogStatus("Configuration failed!");
 		}
+		delete layoutFilePath;
 	}
 }
 
@@ -128,6 +129,7 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 		lines->push_back(*currLine);
 	}
 	layoutFile.close();
+	delete currLine;
 
 	for (std::size_t i{ 0 }; i < lines->size(); ++i)
 	{
@@ -187,5 +189,9 @@ bool MainFrame::ConfigureAutosplitter(int gameRegion, int category, std::string&
 		 updatedLayout << line;
 		 updatedLayout << '\n';
 	}
+	
+	delete autosplitterConfig;
+	delete lines;
+	delete newLayoutText;
 	return true;
 }
